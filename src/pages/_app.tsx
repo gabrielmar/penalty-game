@@ -1,11 +1,14 @@
-import '@/styles/globals.css'
-import type { AppProps } from 'next/app'
-import { Inter } from 'next/font/google'
-import Head from 'next/head'
+import { SessionProvider } from 'next-auth/react';
+import type { AppProps } from 'next/app';
+import { Inter } from 'next/font/google';
+import Head from 'next/head';
 
-const inter = Inter({ subsets: ['latin'] })
+import { ChipsProvider } from '@/context/chips';
+import '@/styles/globals.css';
 
-export default function App({ Component, pageProps }: AppProps) {
+const inter = Inter({ subsets: ['latin'] });
+
+export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <>
       <style jsx global>{`
@@ -15,8 +18,13 @@ export default function App({ Component, pageProps }: AppProps) {
       `}</style>
       <Head>
         <link rel="icon" href="/favicon.svg" />
+        <title>Pênalti Game</title>
       </Head>
-      <Component {...pageProps} />
+      <SessionProvider session={session}>
+        <ChipsProvider>
+          <Component {...pageProps} />
+        </ChipsProvider>
+      </SessionProvider>
     </>
-  )
+  );
 }
