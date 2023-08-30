@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+
+    @apply bg-neutral-950 text-neutral-50 antialiased;
+  }
+}
