@@ -18,7 +18,7 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
       `}</style>
       <Head>
         <link rel="icon" href="/favicon.svg" />
-        <title>Pênalti Game</title>
+        <title>Penalty Game</title>
       </Head>
       <SessionProvider session={session}>
         <ChipsProvider>
