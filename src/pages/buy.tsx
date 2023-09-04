@@ -1,9 +1,9 @@
 import { useSession } from 'next-auth/react';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { IconChip } from '@/assets/icons/logo';
 import { Layout } from '@/components/layout';
-import { chipsContext } from '@/context/chips';
+import { useChips } from '@/contexts/chips';
 
 const PRODUCTS = [
   { id: 1, name: 'Silver', amount: 1000, price: 500 },
@@ -14,7 +14,7 @@ const PRODUCTS = [
 export default function Balance() {
   const { status } = useSession();
   const [isLogged, setIsLogged] = useState(false);
-  const { setChips } = useContext(chipsContext);
+  const { setChips } = useChips();
 
   useEffect(() => {
     if (status === 'authenticated') setIsLogged(true);

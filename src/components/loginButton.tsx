@@ -1,9 +1,9 @@
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { ButtonHTMLAttributes, ReactNode, useContext } from 'react';
+import { ButtonHTMLAttributes, ReactNode } from 'react';
 
 import { IconCoins } from '@/assets/icons/coins';
-import { chipsContext } from '@/context/chips';
+import { useChips } from '@/contexts/chips';
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   children: ReactNode;
@@ -20,13 +20,13 @@ const Button = ({ children, ...props }: ButtonProps) => (
 
 export function LoginButton() {
   const { data: session } = useSession();
-  const { chips: chip } = useContext(chipsContext);
+  const { chips } = useChips();
 
   if (session) {
     return (
       <div className="flex space-x-2 md:space-x-6">
         <Link href="/buy" className="flex items-center rounded-md bg-neutral-800/60 px-2 md:px-4">
-          <span className="text-xl font-semibold">{chip}</span>
+          <span className="text-xl font-semibold">{chips}</span>
           <IconCoins className="ml-3 h-6 w-6 md:ml-4" />
         </Link>
         <Button onClick={() => signOut()}>Sign out</Button>
