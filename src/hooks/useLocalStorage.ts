@@ -2,8 +2,7 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'reac
 
 type SetValue<T> = Dispatch<SetStateAction<T>>;
 
-export function useChips<T>(initialValue: T): [T, SetValue<T>] {
-  const key = 'chips';
+export function useLocalStorage<T>(key: string, initialValue: T): [T, SetValue<T>] {
   // Get from local storage then
   // parse stored json or return initialValue
   const readValue = useCallback((): T => {
@@ -69,5 +68,3 @@ function parseJSON<T>(value: string | null): T | undefined {
     return undefined;
   }
 }
-
-// https://usehooks-ts.com/react-hook/use-local-storage
