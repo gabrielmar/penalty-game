@@ -13,7 +13,10 @@ export const authOptions: AuthOptions = {
         const user = { id: '1' };
 
         const admin = { username: 'admin', password: 'passwd' };
-        if (credentials?.username === admin.username && credentials?.password === admin.password)
+        if (
+          credentials?.username.toLowerCase() === admin.username &&
+          credentials?.password.toLowerCase() === admin.password
+        )
           return user;
 
         return null;
