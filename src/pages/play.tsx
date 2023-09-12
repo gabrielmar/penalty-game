@@ -14,7 +14,7 @@ export default function Play() {
   const { chips, setChips } = useChips();
   const [game, setGame] = useState<GameType>();
   const [points, setPoints] = useState<PointsType>();
-  const isPlayable = useRef(chips >= 5000).current;
+  const isPlayable = useRef(true || chips >= 5000).current;
 
   const handlePhaser = (event: Event) => {
     if (event instanceof CustomEvent) {
@@ -44,9 +44,9 @@ export default function Play() {
     }
     if (isPlayable) initPhaser();
 
-    window.addEventListener('phaser', handlePhaser);
+    // window.addEventListener('phaser', handlePhaser);
     return () => {
-      window.removeEventListener('phaser', handlePhaser);
+      // window.removeEventListener('phaser', handlePhaser);
       game?.destroy(true);
     };
 
@@ -82,18 +82,3 @@ export default function Play() {
     </Layout>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getServerSession(context.req, context.res, authOptions);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: authOptions.pages?.signIn || '/api/auth/signin',
-        permanent: false,
-      },
-    };
-  }
-
-  return { props: {} };
-};
