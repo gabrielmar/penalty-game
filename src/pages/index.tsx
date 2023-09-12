@@ -1,33 +1,61 @@
-import Link from 'next/link';
+import { Game as GameType } from 'phaser';
+import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { IconRollingDices } from '@/assets/icons/dice';
-import { IconChip } from '@/assets/icons/logo';
-import { Layout } from '@/components/layout';
+import { PointsType } from '@/game/scenes/game';
 
-const ITEMS = [
-  { id: 1, title: 'Play games', icon: IconRollingDices, href: 'play' },
-  { id: 2, title: 'Buy Chips', icon: IconChip, href: 'buy', className: 'bg-blue-600' },
-];
+export default function Play() {
+  const [game, setGame] = useState<GameType>();
+  const [points, setPoints] = useState<PointsType>();
 
-export default function Home() {
+  const handlePhaser = (event: Event) => {
+    if (event instanceof CustomEvent) {
+      const { detail } = event;
+
+      const points = detail.points as PointsType;
+      const win = detail.win as boolean;
+
+      setPoints([...points]);
+    }
+  };
+
+  useEffect(() => {
+    async function initPhaser() {
+      const Phaser = await import('phaser');
+      const gameConfig = await import('../game/phaserGame');
+      const phaserGame = new Phaser.Game(gameConfig.config);
+
+      setGame(phaserGame);
+    }
+    initPhaser();
+
+    window.addEventListener('phaser', handlePhaser);
+    return () => {
+      window.removeEventListener('phaser', handlePhaser);
+      game?.destroy(true);
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <Layout>
-      <div className="flex flex-col items-center space-y-8 md:flex-row md:items-stretch md:justify-center md:space-x-16 md:space-y-0">
-        {ITEMS.map((item) => (
-          <Link
-            key={item.id}
-            href={`/${item.href}`}
-            className={twMerge(
-              'group flex w-full max-w-xs flex-col items-center space-y-8 rounded-xl border border-neutral-700 bg-fuchsia-600 px-12 py-14 drop-shadow-md md:max-w-sm',
-              item.className,
-            )}
-          >
-            <item.icon className="h-36 w-36 text-white drop-shadow-xl group-hover:animate-jump md:h-48 md:w-48" />
-            <span className="text-4xl font-bold tracking-wider md:text-5xl">{item.title}</span>
-          </Link>
-        ))}
-      </div>
-    </Layout>
+    <div id="game-container" className="h-screen w-screen">
+      {!game && <div className="text-3xl">Loading...</div>}
+      {game && points && (
+        <div className="absolute left-1 top-1 flex space-x-0.5 self-start md:left-2 md:top-2 md:space-x-1">
+          {points.map((p, i) => (
+            <span
+              key={i}
+              className={twMerge(
+                'h-4 w-4 rounded-full border border-solid border-white/80 md:h-6 md:w-6 lg:h-10 lg:w-10',
+                p === true && 'bg-green-600/80',
+                p === false && 'bg-red-600/80',
+                p === null && 'bg-neutral-500/80',
+              )}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
